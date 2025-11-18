@@ -1,0 +1,185 @@
+#!/usr/bin/perl -ws
+
+# This software is released into the public domain.
+# You can do whatever you want with this code.
+
+#use Data::Dump 'pp';
+#$Data::Dump::LINEWIDTH = 80;
+
+our ($h,$help);
+
+if ($h || $help) {
+  (my $program = $0) =~ s/^.*[\/\\]//;
+  print <<HELP;
+Usage: $program -method='functional basis' [-solv=CPCM_solvent] *.xyz
+
+$program creates 'functional_basis_solvent' directory and populates it 
+with ORCA NMR input files based on XYZ files.
+HELP
+  exit;
+}
+
+our ($method, $solv);
+
+# Таблица Менделеева
+my @ATOM = qw (XX
+               H                                                  He
+               Li Be                               B  C  N  O  F  Ne
+               Na Mg                               Al Si P  S  Cl Ar
+               K  Ca Sc Ti V  Cr Mn Fe Co Ni Cu Zn Ga Ge As Se Br Kr
+               Rb Sr Y  Zr Nb Mo Tc Ru Rh Pd Ag Cd In Sn Sb Te I  Xe
+               Cs Ba La
+                       Ce Pr Nd Pm Sm Eu Gd Tb Dy Ho Er Tm Yb
+                     Lu Hf Ta W  Re Os Ir Pt Au Hg Tl Pb Bi Po At Rn
+               Fr Ra Ac
+                       Th Pa U  Np Pu Am Cm Bk Cf Es Fm Md No
+									   Lr Rf Db Sg Bh Hs Mt Ds Rg
+              );
+my %ATOM;
+@ATOM{@ATOM} = 0..$#ATOM;
+
+my %solv = map {lc($_) => $_} qw (
+Water Acetone Acetonitrile Ammonia Benzene CCl4 CH2Cl2 Chloroform
+Cyclohexane DMF DMSO Ethanol Hexane Methanol Octanol Pyridine THF Toluene
+);
+$solv{h2o} = 'Water';
+$solv{1} = 'Water';
+$solv{me3co} = 'Acetone';
+$solv{mecn} = 'Acetonitrile';
+$solv{nh3} = 'Ammonia';
+$solv{c6h6} = 'Benzene';
+$solv{chcl3} = 'Chloroform';
+$solv{etoh} = 'Ethanol';
+$solv{meoh} = 'Methanol';
+$solv{c5h5n} = 'Pyridine';
+$solv{meph} = 'Toluene';
+$solv{tol} = 'Toluene';
+
+my $solvent = '';
+if ($solv) {
+  my $lcs = lc $solv;
+  if (exists $solv{$lcs}) {
+    $solvent = "CPCM($solv{$lcs})";
+  }
+  else {
+    die "No CPCM solvent $solv\n";
+  }
+}
+if ($solv && $solv eq '1') {
+  $solv = 'CPCM(Chloroform)';
+}
+$solv ||= 'gas';
+
+if (!$method or $method eq '1') {
+  warn "Calculation method may be done via -method='functional basis'\n";
+  warn "PBE0 6-311+G(2d,p) will be used\n";
+  $method = 'PBE0 6-311+G(2d,p)';
+}
+
+(my $method_dir = $method) =~ s/\s+/_/g;
+$method_dir .= "_$solv";
+mkdir $method_dir if ! -d $method_dir;
+
+#my $xyz_dir = shift;
+#die "You must enter as parameter existing directory containing xyz-files\n" unless $xyz_dir;
+
+foreach $xyz_file (@ARGV) {
+  my $mol = (read_molden($xyz_file))[-1];
+  
+  (my $name = $xyz_file) =~ s/\.xyz$//;
+  #$name =~ s/^$xyz_dir\///;
+  open INP, '>', "$method_dir/$name.inp" or die "Can't write to $method_dir/$name.inp: $!\n";
+  print INP "! $method TightSCF NMR $solvent\n\n";
+  my ($charge,$mult) = charge_mult($mol);
+  print INP "* xyz $charge $mult\n";
+  for (my $i=1; $i<@$mol; $i++) {
+    printf INP " %-2s %12.8f %12.8f %12.8f\n", @{$mol->[$i]}[0..3];
+  }
+  print INP "*\n";
+  close INP;
+}
+
+sub charge_mult {
+  my $mol = shift;
+  my ($charge,$mult);
+  if (defined($mol->[0]{Charge}) && defined($mol->[0]{Mult}) ) {
+    return ($mol->[0]{Charge},$mol->[0]{Mult});
+  }
+  else {
+    my $sum; # Sum or atomic numbers
+    for (my $i=1; $i<@$mol; $i++) {
+      $sum += $ATOM{$mol->[$i][0]};
+    }
+    if (defined $mol->[0]{Charge}) {
+      $charge = $mol->[0]{Charge};
+      my $electrons = $sum - $charge;
+      $mult = $electrons%2 ? 2 : 1;
+      return ($charge,$mult);
+    }
+    elsif (defined $mol->[0]{Mult}) {
+      $mult = $mol->[0]{Mult};
+      my $unpaired = ($mult-1)/2;
+      $charge = ($sum-$unpaired)%2;
+      return ($charge,$mult);
+    }
+    else {
+      return ($sum%2,1);
+    }
+  }
+}
+
+sub read_molden {
+ ############################################################################
+ ## Молекула -- ссылка на массив, 0-й элемент -- свойства, следующие - атомы.
+ ## Свойства -- ссылка на хэш с ключами Energy, Symmetry
+ ## Атом -- ссылка на массив [atom, x, y, z, ppm] (ppm может не быть).
+ ##
+ ## Читает xyz. Параметры - имена xyz-файлов. Если параметров нет, то <>.
+ ## Возвращает массив найденных молекул.
+ ############################################################################
+  local @ARGV = @_ ? @_ : @ARGV;
+  my $fnum = qr/-?\d+(?:\.\d+)?/;
+  my $num = qr/-?\d+\.\d+(?:[eE][+-]?\d+)?/;
+  my @mols;
+  my $line;
+  LOOP:
+  while ($line || defined($line = <>)) {
+    #print $line;
+    if ($line =~/^\s*(\d+)\s*$/) {
+      my @mol;
+      my $N = $1;
+      last LOOP if eof();
+      next LOOP if eof(ARGV);
+      $line = <>;
+      $mol[0]{Title} = $line;
+      ($mol[0]{Energy}) = $line =~ /(?:\s|^|=)($num)(?:\s|$)/;
+      ($mol[0]{Symmetry}) = $line =~ /symm\S*\s+(\S+)/i;
+      ($mol[0]{Charge}) = $line =~ /Charge\s+(-?\d+)/;
+      ($mol[0]{Mult}) = $line =~ /Mult\s+(\d+)/;
+      ($mol[0]{HoF}) = $line =~ /HoF\s+($fnum)/o;
+      ($mol[0]{Edisp}) = $line =~ /Edisp\s+($fnum)/o;
+      ($mol[0]{ZPE}) = $line =~ /ZPE\s+($fnum)/o;
+      ($mol[0]{Dipole}) = $line =~ /Dipole\s+($fnum)/o;
+      while ($line =~ /G\(($fnum)\)\s+($fnum)/g) {
+        push @{$mol[0]{G}}, [$1,$2];
+      }
+      for (my $i=1; $i<=$N; $i++) {
+        last LOOP if eof();
+        next LOOP if eof(ARGV);
+        $line = <>;
+        #print $line;
+        if ($line =~ /^\s*([A-Z]{1,2})\s+($num)\s+($num)\s+($num)\s*(.*)/io) {
+          $mol[$i] = [$1,$2,$3,$4,$5];
+        } else {
+          next LOOP;
+        }
+      }
+      push @mols, \@mol;
+      last LOOP if eof();
+    } else {
+      undef $line;
+    }
+  }
+  return @mols;
+}
+

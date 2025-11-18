@@ -1,0 +1,255 @@
+Dichloromethane
+	4,5	5.28
+Chloroform
+	2	7.21
+Methanol
+	3,4,5	3.50
+Nitromethane
+	1,6,7	4.22
+Chloroethane
+	4,5	3.60
+	6,7,8	1.50
+Trichloroethane
+	6,7,8	2.70
+Nitroethane
+	6,7,8	1.55
+	9,10	4.40
+Me2SiHCl
+	6-11	0.54
+11-dichloroethene
+	5,6	5.50
+trans-12-dichloroethene
+	5,6	6.36
+Trichloroethylene
+	6	6.49
+Acetaldehyde
+	4	9.69
+	5,6,7	2.12
+Oxirane
+	4,5,6,7	2.54
+Dimethylsulfoxide
+	5-10	2.50
+Thioxirane
+	4,5,6,7	2.27
+Acetyl_Chloride
+	5,6,7	2.66
+Acetonitrile
+	4,5,6	1.94
+Cyclopropane
+	4-9	0.22
+2-Chloropropane
+	3	4.11
+	6-11	1.51
+2-Chloropropene
+	5,6	5.12
+	7,8,9	2.13
+3-Chloropropene
+	5	5.15
+	6	5.29
+	7	5.90
+	8,9	3.99
+Acetone
+	5-10	2.11
+Oxetane
+	5,6	2.72
+	7,8,9,10	4.73
+Methyl_acetate
+	6,7,8	2.00
+	9,10,11	3.65
+Dimethylformamide
+	6	7.89
+	7,8,9	2.98
+	10,11,12	2.81
+Trichloroacetone
+	8,9,10	2.64
+Cyclopropanone
+	5,6,7,8	1.65
+Propionitrile
+	5,6	2.34
+	7,8,9	1.25
+2-Cl-propionitrile
+	6,7,8	1.85
+	9	4.53
+Isoxazole
+	6	8.49
+	7	6.32
+	8	8.24
+Isobutylene
+	5,6	4.60
+	7-12	1.72
+Cyclobutane
+	5-12	1.96
+2-Butyne
+	5-10	1.70
+Cyclobutene
+	5,6	5.95
+	7,8,9,10	2.57
+Bicyclobutane
+	5,6	1.37
+	7,9	1.47
+	8,10	0.44
+t-Butyl_Chloride
+	6-14	1.61
+t-Butyl_nitrate
+	8-16	1.61
+Chloroisobutylene
+	6	5.79
+	7,8,9	1.80
+	10,11,12	1.80
+THF
+	6,7,8,9	3.71
+	10,11,12,13	1.81
+Dimethylacetamide
+	7,8,9	2.83
+	10,11,12	3.01
+	13,14,15	1.98
+Cyclobutanone
+	6,7,8,9	3.08
+	10,11	2.03
+Butyrolactone
+	7,8	2.31
+	9,10	2.08
+	11,12	4.38
+2-Cyanopropane
+	6	2.70
+	7-12	1.30
+Furan
+	6,7	7.40
+	8,9	6.30
+3-Butyn-2-one
+	6,7,8	2.38
+	9	3.40
+Thiophene
+	6,7	7.10
+	8,9	6.90
+Di-Cl-lactone
+	9,10	4.90
+Methylthiazole
+	7	8.72
+	8	6.92
+	9,10,11	2.50
+Pyrimidine
+	1	9.21
+	8,9	8.74
+	10	7.32
+14-Pyrazine
+	7,8,9,10	8.48
+12-Pyrazine
+	7,8	7.50
+	9,10	9.24
+Cyclopentane
+	6-15	1.50
+2-Methyl-2-butene
+	6,7,8	1.58
+	9	5.12
+	10,11,12	1.48
+	13,14,15	1.58
+Cyclopentene
+	2,3	1.85
+	8,9,10,11	2.29
+	12,13	5.66
+MTBE
+	7,8,9	3.11
+	10-18	1.12
+Tetrahydropyran
+	2,3	1.59
+	9,10,11,12	1.59
+	13,14,15,16	3.56
+N-Methylpyrrolidine
+	7,8,9	2.34
+	10,11,12,13	2.48
+	14,15,16,17	1.78
+Cyclopentanone
+	7,8,9,10	2.16
+	11,12,13,14	1.97
+t-Butyl_cyanide
+	7-15	1.39
+Cyclopentenone
+	7	6.09
+	8	7.72
+	9,10	2.69
+	11,12	2.22
+N-Methylpyrrole
+	1,8,9	3.62
+	10,11	6.57
+	12,13	6.11
+Furfural
+	8	7.11
+	9	6.52
+	10	7.61
+	11	9.63
+Pyridine
+	7,8	8.51
+	9,10	7.14
+	11	7.55
+t-Butylethylene
+	7	4.78
+	8	4.82
+	9	5.80
+	10-18	1.00
+Cyclohexane
+	7-18	1.42
+t-Butylacetylene
+	7	1.89
+	8-16	1.21
+Cyclohexene
+	7,8	5.58
+	9,10,11,12	1.97
+	13,14,15,16	1.62
+Benzene
+	7-12	7.23
+N-Methylpiperidine
+	1,9,10	2.10
+	11,12,13,14	2.23
+	15,16,17,18	1.42
+	19,20	1.42
+Cyclohexanone
+	8,9,10,11	2.25
+	12,13,14,15	1.79
+	16,17	1.79
+Cyclohexenone
+	8	5.88
+	9	6.91
+	10,11	2.10
+	12,13	2.10
+	14,15	2.10
+Fluorobenzene
+	8,9	7.00
+	10,11	7.00
+	12	7.00
+Chlorobenzene
+	8,9	7.22
+	10,11	7.22
+	12	7.22
+Nitrobenzene
+	8,9	8.20
+	10,11	7.57
+	12	7.57
+p-Benzoquinone
+	9,10,11,12	6.79
+Toluene
+	9,10	7.04
+	11,12	7.04
+	13	7.04
+	1,14,15	2.29
+Norbornadiene
+	8,9	1.96
+	10,11	3.52
+	12,13,14,15	6.69
+Anisole
+	9,13	6.80
+	10,12	7.19
+	11	6.80
+	14,15,16	3.70
+Dimethylaniline
+	10,11	6.56
+	12,13	7.10
+	14	6.50
+	15-20	2.85
+Indole
+	11	6.76
+	12	6.38
+	13	7.03
+	14	7.03
+	15	7.03
+	16	7.50
