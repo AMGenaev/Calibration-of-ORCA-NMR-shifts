@@ -38,6 +38,19 @@ delta = slope*sigma + intercept and delta = reference - sigma are printed.
 Please note: the first equation is not the same as the one used by Tantillo 
 (his is delta = (sigma - intercept)/slope ).
 
+Sample Protocol (Linux).
+The following steps describe how to calibrate a new computational method, 
+such as PBE0/def2-TZVP.
+# Download scripts sigma_delta, make_inp and directory Tantillo_Test_set
+chmod +x sigma_delta make_inp
+cd Tantillo_Test_set
+../make_inp -method='PBE0 def2-TZVP' -solv=CHCl3 *.xyz
+cd PBE0_def2-TZVP_CHCl3
+# Run ORCA inputs
+cd ..
+../sigma_delta -stat 1H_exp.txt Tantillo_Test_set
+../sigma_delta -stat 13C_exp.txt Tantillo_Test_set
+
 Format of the experimental_shifts.txt file:
   Empty lines and lines starting with # are ignored.
   There are several lines for each molecule.
